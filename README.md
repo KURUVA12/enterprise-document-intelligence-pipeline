@@ -14,3 +14,7 @@ The platform utilizes a decoupled, highly performant software loop that binds al
 - **Database Architecture:** SQLite3 Relational Storage Engine
 - **Core Scripting Matrix:** Python 3.x, Pandas, & JSON Schema Parsers
 - **Environment Context:** Anaconda Prompt Virtual System Space
+
+
+🌐 Live Production Deployment Link
+👉 Click here to test the interactive portal application live on the internet: [https://enterprise-document-intelligence-pipeline-ck39cbxzkiagxjapp3jr.streamlit.app]
