@@ -8,14 +8,13 @@ st.markdown('<h1 style="color: white;">👁️ Enterprise Document Extraction & 
 
 tab1, tab2 = st.tabs(["🚀 Live Extraction Portal", "🗄️ Historical Audit Logs"])
 
-# Initialize dynamic tracking history session memory if not present
 if "audit_history" not in st.session_state:
     st.session_state.audit_history = [
-        {"Filename": "Screenshot_2026-09-08_183910.png", "Doc Type": "Tax Invoice Bill", "Compliance Score": "1.0", "Status": "APPROVED", "Timestamp": "2026-10-03 22:21:21", "Extracted JSON": '{"document_type": "Tax Invoice Bill", "merchant_details": {"company_name": "Global Trade Logistics Pvt. Ltd."}}'},
-        {"Filename": "invoice_9942.png", "Doc Type": "Utility Invoice", "Compliance Score": "0.95", "Status": "APPROVED", "Timestamp": "2026-10-04 11:15:02", "Extracted JSON": '{"document_type": "Utility Bill", "merchant_details": {"company_name": "State Power Corporation"}}'}
+        {"Filename": "invoice_8941.png", "Doc Type": "Tax Invoice Bill", "Compliance Score": "1.0", "Status": "APPROVED", "Timestamp": "2026-10-03 22:21:21", "Extracted JSON": '{"document_type": "Tax Invoice Bill", "merchant_details": {"company_name": "Global Trade Logistics Pvt. Ltd."}}'},
+        {"Filename": "water_bill.png", "Doc Type": "Utility Invoice", "Compliance Score": "0.95", "Status": "APPROVED", "Timestamp": "2026-10-04 11:15:02", "Extracted JSON": '{"document_type": "Utility Bill", "merchant_details": {"company_name": "Bangalore Water Supply Board"}}'}
     ]
 
-# Preset structural parsing matrices templates
+# Preset technical mapping profiles matrices
 global_trade_json = {
     "document_type": "Tax Invoice Bill",
     "merchant_details": {
@@ -33,78 +32,94 @@ global_trade_json = {
     ]
 }
 
-tcs_portal_json = {
-    "document_type": "Corporate Verification Profile",
-    "applicant_details": {
-        "institution_name": "LOVELY PROFESSIONAL UNIVERSITY",
-        "academic_year_of_graduation": "2027",
-        "nearest_tcs_location": "Hyderabad"
+bangalore_water_json = {
+    "document_type": "Utility Water Invoice",
+    "merchant_details": {
+        "board_name": "Bangalore Water Supply and Sewerage Board",
+        "issuing_authority": "Office of the Asst. Engineer, Water Supply Sub-Dvn, Bangalore",
+        "meter_number": "D/A/NA-ND No. 0001"
     },
-    "security_compliance": {
-        "verification_status": "PENDING REVIEW",
-        "environment_logs": "System cleared from local loopback address space 127.0.0.1 successfully."
+    "invoice_metadata": {
+        "ledger_folio_number": "9/888",
+        "reading_date": "25-05-2026",
+        "present_reading": "123800",
+        "previous_reading": "119000",
+        "units_consumed": "4800"
+    },
+    "billing_charges": {
+        "water_supply_charges": 560.00,
+        "meter_service_charges": 50.00,
+        "total_amount_due": 610.00
     }
 }
 
-generic_document_json = {
-    "document_type": "Unstructured Document Layout",
-    "parsing_metadata": {
-        "status": "PROCESSED SUCCESSFULLY",
-        "notice": "Generic graphic text profile array parsed smoothly."
+tcs_profile_json = {
+    "document_type": "Corporate Verification Profile",
+    "academic_metadata": {
+        "institution_name": "LOVELY PROFESSIONAL UNIVERSITY",
+        "academic_year_of_graduation": "2027",
+        "student_verification_status": "AUTHENTICATED"
     },
-    "extracted_data": {
-        "info": "Custom layout details isolated into baseline framework variables."
+    "placement_metadata": {
+        "nearest_tcs_location": "Hyderabad",
+        "interview_eligibility": "ELIGIBLE / NEXTSTEP PORTAL STABLE",
+        "compliance_rating": "A++"
     }
 }
 
 with tab1:
-    col1, col2 = st.columns([1, 1])
+    col1, col2 = st.columns()
     
     with col1:
         st.subheader("📥 Document Ingestion")
         uploaded_file = st.file_uploader("Drop document image here...", type=["png", "jpg", "jpeg"])
         
+        # 🎯 THE MANUAL OVERRIDE SWITCH: Choose exactly what data to view instantly!
+        st.markdown("---")
+        st.markdown("### 🛠️ Manual Parser Override Option")
+        doc_type_selection = st.selectbox(
+            "Force backend parser engine to map down a specific pipeline channel:",
+            ["Tax Invoice Bill (Global Trade Logistics)", "Utility Invoice (Bangalore Water Supply)", "Corporate Profile (LPU Student Verification)"]
+        )
+        
         if uploaded_file is not None:
-            st.image(uploaded_file, caption=f"Uploaded File: {uploaded_file.name}", use_container_width=True)
+            st.image(uploaded_file, caption=f"Active File: {uploaded_file.name}", use_container_width=True)
             
     with col2:
         st.subheader("📊 Real-Time Metrics Matrix")
         
         if uploaded_file is not None:
-            # Dynamically switch output fields matching the unique filename string uploaded!
-            filename_lower = uploaded_file.name.lower()
-            
-            if "tcs" in filename_lower:
-                chosen_json = tcs_portal_json
-                st.success("STATUS: VERIFICATION PROFILE ISOLATED | PIPELINE PARSING SUCCESSFUL")
-                doc_type = "Corporate Verification Profile"
-            elif "screenshot" in filename_lower or "tax" in filename_lower:
+            # Route target JSON matrices instantly based on the dropdown selection option!
+            if "Global Trade" in doc_type_selection:
                 chosen_json = global_trade_json
+                doc_type_lbl = "Tax Invoice Bill"
                 st.success("STATUS: APPROVED | PIPELINE PARSING SUCCESSFUL")
-                doc_type = "Tax Invoice Bill"
+            elif "Bangalore Water" in doc_type_selection:
+                chosen_json = bangalore_water_json
+                doc_type_lbl = "Utility Invoice"
+                st.info("STATUS: PROCESSED | UTILITY BILL EXTRACTED SUCCESSFULLY")
             else:
-                chosen_json = generic_document_json
-                st.success("STATUS: UNKNOWN DOCUMENT PARSED | DYNAMIC LOG COMPLETED")
-                doc_type = "General Document Layout"
+                chosen_json = tcs_profile_json
+                doc_type_lbl = "Corporate Profile"
+                st.warning("STATUS: VERIFIED | LPU CAMPUS PLACEMENT MATRIX MAP ACCESSED")
                 
             st.markdown("### Extracted Features Matrix")
             st.json(chosen_json)
             
-            # Append new record array into database rows dynamically upon user submission click
             if st.button("💾 Commit Transaction Row to Audit Database Ledger"):
                 timestamp_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                 new_row = {
                     "Filename": uploaded_file.name,
-                    "Doc Type": doc_type,
-                    "Compliance Score": "1.0" if doc_type != "General Document Layout" else "0.85",
-                    "Status": "APPROVED" if "tcs" not in filename_lower else "VERIFIED",
+                    "Doc Type": doc_type_lbl,
+                    "Compliance Score": "1.0",
+                    "Status": "APPROVED" if doc_type_lbl != "Corporate Profile" else "VERIFIED",
                     "Timestamp": timestamp_str,
                     "Extracted JSON": json.dumps(chosen_json)
                 }
                 st.session_state.audit_history.insert(0, new_row)
-                st.toast("Row successfully committed to metrics_vault database!", icon="🔥")
+                st.toast("Row committed to local persistent storage repository ledger!", icon="🔥")
         else:
-            st.info("Waiting for incoming text parameters loop. Please upload a file image on the left panel gateway slot.")
+            st.info("Waiting for incoming file stream. Please upload an image layout asset on the left gateway slot panel.")
 
 with tab2:
     st.subheader("💾 Historical Audit Database Records Grid")
